@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="plugin" group="zoocart_payment" method="upgrade" version="2.5.9" zlfw="3.0.12">
+	<name>PLG_ZOOCART_PAYMENT_MOLLIE</name>
+	<author>Matthijs Alles - Bixie</author>
+	<creationDate>April 2015</creationDate>
+	<copyright>Copyright (C) JOOlanders SL/Bixie</copyright>
+	<license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 only</license>
+	<authorEmail>info@bixie.nl</authorEmail>
+	<authorUrl>http://www.bixie.nl</authorUrl>
+	<version>1.0</version>
+	<description>PLG_ZOOCART_PAYMENT_MOLLIE_DESCRIPTION</description>
+	<files>
+		<filename plugin="mollie">mollie.php</filename>
+		<filename>install.script.php</filename>
+		<folder>fields</folder>
+		<folder>Mollie</folder>
+		<folder>tmpl</folder>
+	</files>
+	<languages>
+		<language tag="en-GB">language/en-GB/en-GB.plg_zoocart_payment_mollie.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.plg_zoocart_payment_mollie.sys.ini</language>
+		<language tag="nl-NL">language/nl-NL/nl-NL.plg_zoocart_payment_mollie.ini</language>
+		<language tag="nl-NL">language/nl-NL/nl-NL.plg_zoocart_payment_mollie.sys.ini</language>
+	</languages>
+	<config>
+		<fields name="params">
+			<fieldset name="basic" addfieldpath="/plugins/zoocart_payment/mollie/fields">
+				<field type="text" name="title" default="mOLLIE" label="PLG_ZOOCART_PAYMENT_MOLLIE_TITLE" description="PLG_ZOOCART_PAYMENT_MOLLIE_TITLE_DESCR" />
+				<field type="spacer" name="spacer" hr="true"/>
+
+				<field name="type" type="molliepayments" multiple="" default=""
+					label="PLG_ZOOCART_PAYMENT_MOLLIE_TYPE_LABEL"
+					description="PLG_ZOOCART_PAYMENT_MOLLIE_TYPE_DESCRIPTION"
+					/>
+
+				<field type="text" name="live_api" default="" label="PLG_ZOOCART_PAYMENT_MOLLIE_LIVE_API_LABEL" description="PLG_ZOOCART_PAYMENT_MOLLIE_LIVE_API_DESCRIPTION" />
+				<field type="text" name="test_api" default="" label="PLG_ZOOCART_PAYMENT_MOLLIE_TEST_API_LABEL" description="PLG_ZOOCART_PAYMENT_MOLLIE_TEST_API_DESCRIPTION" />
+
+				<field type="spacer" name="spacer2" hr="true"/>
+
+				<field type="radio" name="auto" default="1" class="btn-group btn-group-yesno"
+                       label="PLG_ZOOCART_PAYMENT_MOLLIE_AUTOSUBMIT_LABEL"
+                       description="PLG_ZOOCART_PAYMENT_MOLLIE_AUTOSUBMIT_DESCRIPTION">
+					<option value="0">JNO</option>
+					<option value="1">JYES</option>
+				</field>
+				<field type="radio" name="test" default="0" class="btn-group btn-group-yesno"
+                       label="PLG_ZOOCART_PAYMENT_MOLLIE_TESTMODE_LABEL"
+                       description="PLG_ZOOCART_PAYMENT_MOLLIE_TESTMODE_DESCRIPTION">
+					<option value="0">JNO</option>
+					<option value="1">JYES</option>
+				</field>
+				<field type="text" name="fee" default="0" label="PLG_ZOOCART_PAYMENT_MOLLIE_FEE_LABEL" description="PLG_ZOOCART_PAYMENT_MOLLIE_FEE_DESCRIPTION" />
+				<field type="radio" name="fee_type" default="net" class="btn-group btn-group-yesno"
+                       label="PLG_ZOOCART_PAYMENT_MOLLIE_FEETYPE_LABEL"
+                       description="PLG_ZOOCART_PAYMENT_MOLLIE_FEETYPE_DESCRIPTION">
+					<option value="net">Net</option>
+					<option value="perc">%</option>
+				</field>
+			</fieldset>
+		</fields>
+	</config>
+</extension>
