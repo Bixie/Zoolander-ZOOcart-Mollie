@@ -11,7 +11,7 @@
 	<description>PLG_ZOOCART_PAYMENT_MOLLIE_DESCRIPTION</description>
 	<files>
 		<filename plugin="mollie">mollie.php</filename>
-		<filename>install.script.php</filename>
+		<filename>molliehelper.php</filename>
 		<folder>fields</folder>
 		<folder>Mollie</folder>
 		<folder>tmpl</folder>
@@ -25,25 +25,19 @@
 	<config>
 		<fields name="params">
 			<fieldset name="basic" addfieldpath="/plugins/zoocart_payment/mollie/fields">
-				<field type="text" name="title" default="mOLLIE" label="PLG_ZOOCART_PAYMENT_MOLLIE_TITLE" description="PLG_ZOOCART_PAYMENT_MOLLIE_TITLE_DESCR" />
+				<field type="text" name="title" default="Mollie" label="PLG_ZOOCART_PAYMENT_MOLLIE_TITLE" description="PLG_ZOOCART_PAYMENT_MOLLIE_TITLE_DESCR" />
 				<field type="spacer" name="spacer" hr="true"/>
-
-				<field name="type" type="molliepayments" multiple="" default=""
-					label="PLG_ZOOCART_PAYMENT_MOLLIE_TYPE_LABEL"
-					description="PLG_ZOOCART_PAYMENT_MOLLIE_TYPE_DESCRIPTION"
-					/>
 
 				<field type="text" name="live_api" default="" label="PLG_ZOOCART_PAYMENT_MOLLIE_LIVE_API_LABEL" description="PLG_ZOOCART_PAYMENT_MOLLIE_LIVE_API_DESCRIPTION" />
 				<field type="text" name="test_api" default="" label="PLG_ZOOCART_PAYMENT_MOLLIE_TEST_API_LABEL" description="PLG_ZOOCART_PAYMENT_MOLLIE_TEST_API_DESCRIPTION" />
 
-				<field type="spacer" name="spacer2" hr="true"/>
+                <field name="type" type="molliepayments" multiple="" default=""
+                       label="PLG_ZOOCART_PAYMENT_MOLLIE_TYPE_LABEL"
+                       description="PLG_ZOOCART_PAYMENT_MOLLIE_TYPE_DESCRIPTION"
+                        />
 
-				<field type="radio" name="auto" default="1" class="btn-group btn-group-yesno"
-                       label="PLG_ZOOCART_PAYMENT_MOLLIE_AUTOSUBMIT_LABEL"
-                       description="PLG_ZOOCART_PAYMENT_MOLLIE_AUTOSUBMIT_DESCRIPTION">
-					<option value="0">JNO</option>
-					<option value="1">JYES</option>
-				</field>
+                <field type="spacer" name="spacer2" hr="true"/>
+
 				<field type="radio" name="test" default="0" class="btn-group btn-group-yesno"
                        label="PLG_ZOOCART_PAYMENT_MOLLIE_TESTMODE_LABEL"
                        description="PLG_ZOOCART_PAYMENT_MOLLIE_TESTMODE_DESCRIPTION">

@@ -1,6 +1,6 @@
 <?php
 /* *
- *	Bixie Printshop
+ *	Bixie ZOOcart - Mollie
  *  molliepayments.php
  *	Created on 8-4-2015 23:32
  *  
