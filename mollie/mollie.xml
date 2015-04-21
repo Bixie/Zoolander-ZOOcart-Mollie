@@ -31,7 +31,7 @@
 				<field type="text" name="live_api" default="" label="PLG_ZOOCART_PAYMENT_MOLLIE_LIVE_API_LABEL" description="PLG_ZOOCART_PAYMENT_MOLLIE_LIVE_API_DESCRIPTION" />
 				<field type="text" name="test_api" default="" label="PLG_ZOOCART_PAYMENT_MOLLIE_TEST_API_LABEL" description="PLG_ZOOCART_PAYMENT_MOLLIE_TEST_API_DESCRIPTION" />
 
-                <field name="type" type="molliepayments" multiple="" default=""
+                <field name="methods" type="molliepayments" multiple="true" default=""
                        label="PLG_ZOOCART_PAYMENT_MOLLIE_TYPE_LABEL"
                        description="PLG_ZOOCART_PAYMENT_MOLLIE_TYPE_DESCRIPTION"
                         />
@@ -45,7 +45,7 @@
 					<option value="1">JYES</option>
 				</field>
 				<field type="text" name="fee" default="0" label="PLG_ZOOCART_PAYMENT_MOLLIE_FEE_LABEL" description="PLG_ZOOCART_PAYMENT_MOLLIE_FEE_DESCRIPTION" />
-				<field type="radio" name="fee_type" default="net" class="btn-group btn-group-yesno"
+				<field type="radio" name="fee_type" default="net" class="btn-group"
                        label="PLG_ZOOCART_PAYMENT_MOLLIE_FEETYPE_LABEL"
                        description="PLG_ZOOCART_PAYMENT_MOLLIE_FEETYPE_DESCRIPTION">
 					<option value="net">Net</option>

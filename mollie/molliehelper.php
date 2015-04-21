@@ -18,25 +18,34 @@ class Molliehelper {
 	 */
 	protected $api_key = '';
 	/**
+	 * @var \Joomla\Registry\Registry
+	 */
+	protected $params;
+	/**
 	 * @var Mollie_API_Client
 	 */
 	protected $mollie;
 
-	public function __construct () {
+	/**
+	 * @param \Joomla\Registry\Registry $params
+	 */
+	public function __construct ($params) {
 
 		require_once __DIR__ . "/Mollie/API/Autoloader.php";
+		$this->params = $params;
+		$this->api_key = $params->get('test', 0) ? $params->get('test_api', '') : $params->get('live_api', '');
 
 		$this->mollie = new Mollie_API_Client;
+		$this->mollie->setApiKey($this->api_key);
 
 	}
 
 	/**
-	 * @param $api_key
-	 * @throws Mollie_API_Exception
+	 * Haal de lijst van beschikbare betaalmethodes
+	 * @return Mollie_API_Object_List|Mollie_API_Object_Method[]
 	 */
-	public function setApiKey ($api_key) {
-		$this->api_key = $api_key;
-		$this->mollie->setApiKey($this->api_key);
+	public function getMethods () {
+		return $this->mollie->methods->all();
 	}
 
 	/**
@@ -49,23 +58,26 @@ class Molliehelper {
 
 	/**
 	 * Zet een betaling klaar bij de bank en maak de betalings URL beschikbaar
+	 * @param      $method
 	 * @param      $order_id
-	 * @param      $order_code
 	 * @param      $amount
 	 * @param      $description
 	 * @param      $return_url
 	 * @param null $issuer
 	 * @return Mollie_API_Object_Payment
+	 * @throws Mollie_API_Exception
 	 */
-	public function createPayment ($order_id, $order_code, $amount, $description, $return_url, $issuer = null) {
+	public function createPayment ($method, $order_id, $amount, $description, $return_url, $issuer = null) {
+		if (empty($order_id)) {
+			throw new Mollie_API_Exception("No order_id given.");
+		}
 		return $this->mollie->payments->create(array(
 			"amount"       => $amount,
-			"method"       => Mollie_API_Object_Method::IDEAL,
+			"method"       => $method,
 			"description"  => $description,
 			"redirectUrl"  => $return_url,
 			"metadata"     => array(
-				"order_id" => $order_id,
-				"order_code" => $order_code
+				"order_id" => $order_id
 			),
 			"issuer"       => $issuer
 		));
