@@ -29,7 +29,7 @@ class JFormFieldMolliepayments extends JFormFieldList {
 
 	protected function getInput () {
 		$plugin = JPluginHelper::getPlugin('zoocart_payment', 'mollie');
-		$this->pluginParams = new \Joomla\Registry\Registry();
+		$this->pluginParams = new JRegistry;
 		$this->pluginParams->loadString($plugin->params);
 		if ($this->pluginParams->get('live_api', '') == '' || $this->pluginParams->get('test_api', '') == '') {
 			return JText::_('PLG_ZOOCART_PAYMENT_MOLLIE_TYPE_API_ERROR');
