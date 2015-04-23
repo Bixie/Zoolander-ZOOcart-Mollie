@@ -1,11 +1,11 @@
 <?php
 /**
-* @package		ZOOcart
-* @author		ZOOlanders http://www.zoolanders.com
-* @author		Matthijs Alles - Bixie
-* @copyright	Copyright (C) JOOlanders, SL
-* @license		http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 only
-*/
+ * @package		ZOOcart
+ * @author		ZOOlanders http://www.zoolanders.com
+ * @author		Matthijs Alles - Bixie
+ * @copyright	Copyright (C) JOOlanders, SL
+ * @license		http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 only
+ */
 
 /**
  * @var string $actionUrl
@@ -18,22 +18,24 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
 
 ?>
 <?php if (!empty($data['errorMessage'])) : ?>
-    <div class="uk-alert uk-alert-warning"><?php echo $data['errorMessage']; ?></div>
+	<div class="uk-alert uk-alert-warning"><?php echo $data['errorMessage']; ?></div>
 <?php else: ?>
 	<form action="<?php echo $actionUrl; ?>" method="post">
 		<p><?php echo JText::_('PLG_ZOOCART_PAYMENT_MOLLIE_ORDER_PLACED'); ?></p>
-		<?php if (count($methods) == 1) : ?>
+		<?php if (count($methods) == 1) :
+			$method = reset($methods);
+			?>
 			<div class="uk-grid">
-			    <div class="uk-width-1-2">
+				<div class="uk-width-1-2">
 					<div class="uk-panel uk-panel-box">
 						<img src="<?php echo $method->image->normal; ?>" alt="<?php echo $method->id; ?>" >
 						<strong><?php echo $method->description; ?></strong>
 					</div>
-			    </div>
-			    <div class="uk-width-1-2 uk-text-right">
+				</div>
+				<div class="uk-width-1-2 uk-text-right">
 					<input type="hidden" name="mollie_method" value="<?php echo $method->id; ?>"/>
 					<button type="submit" class="uk-button uk-button-success"><?php echo JText::_('PLG_ZOOCART_PAYMENT_MOLLIE_TO_PAYMENT'); ?></button>
-			    </div>
+				</div>
 			</div>
 
 		<?php else: ?>
