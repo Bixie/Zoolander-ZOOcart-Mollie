@@ -26,13 +26,13 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
 			$method = reset($methods);
 			?>
 			<div class="uk-grid">
-				<div class="uk-width-1-2">
+				<div class="uk-width-medium-1-2">
 					<div class="uk-panel uk-panel-box">
 						<img src="<?php echo $method->image->normal; ?>" alt="<?php echo $method->id; ?>" >
 						<strong><?php echo $method->description; ?></strong>
 					</div>
 				</div>
-				<div class="uk-width-1-2 uk-text-right">
+				<div class="uk-width-medium-1-2 uk-flex uk-flex-middle">
 					<input type="hidden" name="mollie_method" value="<?php echo $method->id; ?>"/>
 					<button type="submit" class="uk-button uk-button-success"><?php echo JText::_('PLG_ZOOCART_PAYMENT_MOLLIE_TO_PAYMENT'); ?></button>
 				</div>
@@ -63,6 +63,3 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
 		<?php echo JHtml::_('form.token'); ?>
 	</form>
 <?php endif; ?>
-
-
-
