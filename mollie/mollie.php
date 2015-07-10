@@ -13,6 +13,11 @@ require_once __DIR__ . '/molliehelper.php';
 
 class plgZoocart_PaymentMollie extends JPaymentDriver {
 
+	public function __construct(&$subject, $config = array()) {
+		parent::__construct($subject, $config);
+		$this->loadLanguage();
+	}
+
 	public function getPaymentFee($data = array()) {
 		if ($this->params->get('fee_type' ,'net') == 'perc') {
 			$perc = ((float) $this->params->get('fee', 0)) / 100;
