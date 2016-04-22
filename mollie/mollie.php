@@ -85,7 +85,7 @@ class plgZoocart_PaymentMollie extends JPaymentDriver {
 		return $html;
 	}
 
-	public function render($data = array()) {
+	public function zoocartRender($data = array()) {
 		$app = App::getInstance('zoo');
 		$data['order']->state = $app->zoocart->getConfig()->get('payment_pending_orderstate', 4);
 		$app->zoocart->table->orders->save($data['order']);
@@ -106,7 +106,7 @@ class plgZoocart_PaymentMollie extends JPaymentDriver {
 	 * 			redirect: false (default) or internal url
 	 *         )
 	 */
-	public function callback($data = array()) {
+	public function zoocartCallback($data = array()) {
 		$data = $this->app->data->create($data);
 		$task = $this->app->request->get('mollie_task', '');
 		$return = array(
