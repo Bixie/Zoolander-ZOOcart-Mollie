@@ -11,5 +11,3 @@ Using the Mollie REST api.
 
 * Key 1: live API key
 * Key 2: test API key
-
-Webhook url: `http://www.site.nl/index.php?option=com_zoolanders&controller=orders&task=callback&format=raw&payment_method=mollie&mollie_task=webhook`
