@@ -123,6 +123,7 @@ class plgZoocart_PaymentMollie extends JPaymentDriver {
 				$method = $this->app->request->get('mollie_method', '');
 				$issuer = $this->app->request->get('mollie_issuer', null);
 				$amount = $order->total;
+				$webhookUrl = $this->app->zoocart->payment->getCallbackUrl('mollie', 'raw') . '&mollie_task=webhook';
 				$returnUrl = $this->app->zoocart->payment->getCallbackUrl('mollie', 'raw') . '&mollie_task=return&order_id=' . $order_id;
 				$description = JText::_('PLG_ZOOCART_ORDER') . ' ' . $order->id . ', ' . JFactory::getApplication()->getCfg('sitename');
 
@@ -130,7 +131,7 @@ class plgZoocart_PaymentMollie extends JPaymentDriver {
 				try {
 					$mollie = new Molliehelper($this->params);
 
-					$payment = $mollie->createPayment($method, $order->id, $amount, $description, $returnUrl, $issuer);
+					$payment = $mollie->createPayment($method, $order->id, $amount, $description, $returnUrl, $webhookUrl, $issuer);
 					$return['transaction_id'] = $payment->id;
 					$this->app->session->set('com_zoo.zoocart.payment_mollie.payment_id.order' . $order->id, $payment->id);
 					$return['redirect'] = $payment->getPaymentUrl();
