@@ -63,11 +63,12 @@ class Molliehelper {
 	 * @param      $amount
 	 * @param      $description
 	 * @param      $return_url
+     * @param      $webhook_url
 	 * @param null $issuer
 	 * @return Mollie_API_Object_Payment
 	 * @throws Mollie_API_Exception
 	 */
-	public function createPayment ($method, $order_id, $amount, $description, $return_url, $issuer = null) {
+	public function createPayment ($method, $order_id, $amount, $description, $return_url, $webhook_url, $issuer = null) {
 		if (empty($order_id)) {
 			throw new Mollie_API_Exception("No order_id given.");
 		}
@@ -76,7 +77,8 @@ class Molliehelper {
 			"method"       => $method,
 			"description"  => $description,
 			"redirectUrl"  => $return_url,
-			"metadata"     => array(
+            "webhookUrl"   => $webhook_url,
+            "metadata"     => array(
 				"order_id" => $order_id
 			),
 			"issuer"       => $issuer
