@@ -190,7 +190,7 @@ class plgZoocart_PaymentMollie extends JPaymentDriver {
 				if ($payment_id) {
 					try {
 						$mollie = new Molliehelper($this->params);
-						$payment = $mollie->checkPayment($return['transaction_id']);
+						$payment = $mollie->checkPayment($payment_id);
 						if ($id = (int) $payment->metadata->order_id) {
 							$order = $this->app->table->orders->get( $id );
 						} else {
