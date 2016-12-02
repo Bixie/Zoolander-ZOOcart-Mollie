@@ -166,7 +166,7 @@ class plgZoocart_PaymentMollie extends JPaymentDriver {
 						$message['messageStyle'] = 'uk-alert-success';
 					} elseif ($payment->isOpen() == false) {
 						$return['status'] = JPaymentDriver::ZC_PAYMENT_FAILED;
-						$return['total'] = $order->subtotal;
+						$return['total'] = $order->total;
 						$message['message'] = JText::_('PLG_ZOOCART_PAYMENT_MOLLIE_TRANS_FAILED');
 						$message['messageStyle'] = 'uk-alert-danger';
 					}
@@ -175,7 +175,7 @@ class plgZoocart_PaymentMollie extends JPaymentDriver {
 
 				} catch (Mollie_API_Exception $e) {
 					$return['status'] = JPaymentDriver::ZC_PAYMENT_FAILED;
-					$return['total'] = $order->subtotal;
+					$return['total'] = $order->total;
 					$message['message'] = $e->getMessage();
 					$message['messageStyle'] = 'uk-alert-danger';
 				}
@@ -204,7 +204,7 @@ class plgZoocart_PaymentMollie extends JPaymentDriver {
 							$message['messageStyle'] = 'uk-alert-success';
 						} elseif ($payment->isOpen() == false) {
 							$return['status'] = JPaymentDriver::ZC_PAYMENT_FAILED;
-							$return['total'] = $order->subtotal;
+							$return['total'] = $order->total;
 							$message['message'] = JText::_('PLG_ZOOCART_PAYMENT_MOLLIE_TRANS_FAILED');
 							$message['messageStyle'] = 'uk-alert-danger';
 						}
