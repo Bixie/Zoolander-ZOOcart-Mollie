@@ -162,8 +162,12 @@ class plgZoocart_PaymentMollie extends JPaymentDriver {
 					if ($payment->isPaid() == true) {
 						$return['status'] = JPaymentDriver::ZC_PAYMENT_PAYED;
 						$return['total'] = $payment->amount;
-						$message['message'] = JText::_('PLG_ZOOCART_PAYMENT_MOLLIE_TRANS_SUCCESS');
-						$message['messageStyle'] = 'uk-alert-success';
+                        if ($Itemid = $this->params->get('redirect_success' , '')) {
+                            $return['redirect'] = JRoute::_('index.php?Itemid=' . $Itemid);
+                        } else {
+                            $message['message'] = JText::_('PLG_ZOOCART_PAYMENT_MOLLIE_TRANS_SUCCESS');
+                            $message['messageStyle'] = 'uk-alert-success';
+                        }
 					} elseif ($payment->isOpen() == false) {
 						$return['status'] = JPaymentDriver::ZC_PAYMENT_FAILED;
 						$return['total'] = $order->total;

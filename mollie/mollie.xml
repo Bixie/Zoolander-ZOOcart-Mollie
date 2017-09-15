@@ -51,6 +51,12 @@
 					<option value="net">Net</option>
 					<option value="perc">%</option>
 				</field>
+				<field name="redirect_success" type="menuitem"
+					   class="inputbox" label="PLG_ZOOCART_PAYMENT_MOLLIE_REDIRECT_SUCCESS_LABEL"
+					   description="PLG_ZOOCART_PAYMENT_MOLLIE_REDIRECT_SUCCESS_DESCRIPTION"
+					   default="">
+					<option value="">JNONE</option>
+				</field>
 			</fieldset>
 		</fields>
 	</config>
