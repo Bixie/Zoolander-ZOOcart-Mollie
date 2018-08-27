@@ -1,0 +1,12 @@
+{
+    "name": "bixie/zoocart-mollie",
+    "description": "Payment plugin for Mollie for ZOOcart",
+    "require": {
+        "mollie/mollie-api-php": "^2.0"
+    },
+    "autoload": {
+        "psr-4" : {
+            "Bixie\\ZoocartMollie\\": "src"
+        }
+    }
+}

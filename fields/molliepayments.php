@@ -3,7 +3,7 @@
  *	Bixie ZOOcart - Mollie
  *  molliepayments.php
  *	Created on 8-4-2015 23:32
- *  
+ *
  *  @author Matthijs
  *  @copyright Copyright (C)2015 Bixie.nl
  *
@@ -11,9 +11,14 @@
 
 // No direct access
 defined('_JEXEC') or die;
+if (!class_exists( 'Bixie\ZoocartMollie\Helper')) {
+    require_once dirname(__DIR__) . '/vendor/autoload.php';
+}
 
 JFormHelper::loadFieldClass('list');
-require_once dirname(__DIR__) . '/molliehelper.php';
+use Bixie\ZoocartMollie\Helper as Molliehelper;
+use Mollie\Api\Exceptions\ApiException;
+
 /**
  *
  */
@@ -49,7 +54,7 @@ class JFormFieldMolliepayments extends JFormFieldList {
 			foreach ($methods as $method) {
 				$options[] = JHtml::_('select.option', $method->id, $method->description);
 			}
-		} catch (Mollie_API_Exception $e) {
+		} catch (ApiException $e) {
 			JFactory::getApplication()->enqueueMessage($e->getMessage(), 'error');
 		}
 		return $options;

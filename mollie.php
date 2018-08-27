@@ -9,7 +9,10 @@
 
 // no direct access
 defined( '_JEXEC' ) or die( 'Restricted access' );
-require_once __DIR__ . '/molliehelper.php';
+require_once __DIR__ . '/vendor/autoload.php';
+
+use Bixie\ZoocartMollie\Helper as Molliehelper;
+use Mollie\Api\Exceptions\ApiException;
 
 class plgZoocart_PaymentMollie extends JPaymentDriver {
 
@@ -41,13 +44,12 @@ class plgZoocart_PaymentMollie extends JPaymentDriver {
         $data['errorMessage'] = '';
         $methods = array();
         $selected = null;
-        $amount = $data['order']->total;
         try {
             $mollie = new Molliehelper($this->params);
 
             $methodsData = $mollie->getMethods();
             foreach ($methodsData as $method) {
-                if (in_array($method->id, $methodsAllowed) && $amount > $method->getMinimumAmount() && $amount < $method->getMaximumAmount()) {
+                if (in_array($method->id, $methodsAllowed)) {
                     if ($selected == null) { //select first
                         $selected = $method->id;
                     }
@@ -59,7 +61,7 @@ class plgZoocart_PaymentMollie extends JPaymentDriver {
                 $data['errorMessage'] = JText::_('PLG_ZOOCART_PAYMENT_MOLLIE_INVALID_AMOUNT');
             }
 
-        } catch (Mollie_API_Exception $e) {
+        } catch (ApiException $e) {
             $data['errorMessage'] = $e->getMessage();
         }
 
@@ -95,16 +97,15 @@ class plgZoocart_PaymentMollie extends JPaymentDriver {
 
     /**
      * Plugin event triggered when the payment plugin notifies for the transaction
-     *
-     * @param  array  $data The data received
-     *
+     * @param  array $data The data received
      * @return array(
-     *         		status: 0 => failed, 1 => success, -1 => pending
-     *         		transaction_id
-     *         		order_id,
-     *         		total,
-     * 			redirect: false (default) or internal url
-     *         )
+     *                     status: 0 => failed, 1 => success, -1 => pending
+     *                     transaction_id
+     *                     order_id,
+     *                     total,
+     *                     redirect: false (default) or internal url
+     *                     )
+     * @throws Exception
      */
     public function zoocartCallback(&$data = array()) {
         $data = $this->app->data->create($data);
@@ -135,8 +136,8 @@ class plgZoocart_PaymentMollie extends JPaymentDriver {
                     $return['transaction_id'] = $payment->id;
                     $return['total'] = $amount;
                     $this->app->session->set('com_zoo.zoocart.payment_mollie.payment_id.order' . $order->id, $payment->id);
-                    $return['redirect'] = $payment->getPaymentUrl();
-                } catch (Mollie_API_Exception $e) {
+                    $return['redirect'] = $payment->getCheckoutUrl();
+                } catch (ApiException $e) {
                     JFactory::getApplication()->enqueueMessage($e->getMessage(), 'error');
                     $return['status'] = JPaymentDriver::ZC_PAYMENT_FAILED;
                     $return['redirect'] = $returnUrl;
@@ -154,7 +155,7 @@ class plgZoocart_PaymentMollie extends JPaymentDriver {
                     if ($id = (int) $data->get('order_id', null)) {
                         $order = $this->app->table->orders->get( $id );
                     } else {
-                        throw new Mollie_API_Exception(JText::_('PLG_ZOOCART_PAYMENT_MOLLIE_INVALID_REQUEST'));
+                        throw new ApiException(JText::_('PLG_ZOOCART_PAYMENT_MOLLIE_INVALID_REQUEST'));
                     }
                     $return['order_id'] = $order->id;
                     $zc_payments = [];
@@ -168,17 +169,17 @@ class plgZoocart_PaymentMollie extends JPaymentDriver {
                         rsort($ids);
                         $current_payment = $zc_payments[reset($ids)];
                     } else {
-                        throw new Mollie_API_Exception(JText::_('Transaction not found'));
+                        throw new ApiException(JText::_('Transaction not found'));
                     }
 
                     $return['transaction_id'] = $current_payment->transaction_id;
                     $return['redirect'] = $this->app->zoocart->payment->getReturnUrl();
-                    $message = array();
+                    $message = [];
                     $mollie = new Molliehelper($this->params);
                     $payment = $mollie->checkPayment($return['transaction_id']);
                     if ($payment->isPaid() == true) {
                         $return['status'] = JPaymentDriver::ZC_PAYMENT_PAYED;
-                        $return['total'] = $payment->amount;
+                        $return['total'] = (float)$payment->amount->value;
                         $message['message'] = JText::_('PLG_ZOOCART_PAYMENT_MOLLIE_TRANS_SUCCESS');
                         $message['messageStyle'] = 'uk-alert-success';
                     } elseif ($payment->isOpen() == false) {
@@ -190,7 +191,7 @@ class plgZoocart_PaymentMollie extends JPaymentDriver {
 
                     $this->app->session->set('com_zoo.zoocart.payment_mollie.payment_id.order' . $order->id, null);
 
-                } catch (Mollie_API_Exception $e) {
+                } catch (ApiException $e) {
                     $return['status'] = JPaymentDriver::ZC_PAYMENT_PENDING;
                     $return['total'] = $order->total;
                     $message['message'] = $e->getMessage();
@@ -199,7 +200,6 @@ class plgZoocart_PaymentMollie extends JPaymentDriver {
 
                 $this->app->session->set('com_zoo.zoocart.payment_mollie.message',$message['message']);
                 $this->app->session->set('com_zoo.zoocart.payment_mollie.messageStyle',$message['messageStyle']);
-                $this->app->session->set('com_zoo.zoocart.payment_mollie.formHtml',$message['formHtml']);
 
                 break;
             case 'webhook':
@@ -212,19 +212,19 @@ class plgZoocart_PaymentMollie extends JPaymentDriver {
                         if ($id = (int) $payment->metadata->order_id) {
                             $order = $this->app->table->orders->get( $id );
                         } else {
-                            throw new Mollie_API_Exception(JText::_('PLG_ZOOCART_PAYMENT_MOLLIE_INVALID_REQUEST'));
+                            throw new ApiException(JText::_('PLG_ZOOCART_PAYMENT_MOLLIE_INVALID_REQUEST'));
                         }
                         $return['order_id'] = $order->id;
                         $return['transaction_id'] = $payment_id;
                         if ($payment->isPaid() == true) {
                             $return['status'] = JPaymentDriver::ZC_PAYMENT_PAYED;
-                            $return['total'] = $payment->amount;
+                            $return['total'] = (float)$payment->amount->value;
                         } elseif ($payment->isOpen() == false) {
                             $return['status'] = JPaymentDriver::ZC_PAYMENT_FAILED;
                             $return['total'] = $order->total;
                         }
 
-                    } catch (Mollie_API_Exception $e) {
+                    } catch (ApiException $e) {
                         $return['status'] = JPaymentDriver::ZC_PAYMENT_PENDING;
                     }
                 }

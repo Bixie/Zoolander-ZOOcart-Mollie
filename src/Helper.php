@@ -3,16 +3,21 @@
  *	Bixie ZOOcart - Mollie
  *  molliehelper.php
  *	Created on 8-4-2015 23:53
- *  
+ *
  *  @author Matthijs
  *  @copyright Copyright (C)2015 Bixie.nl
  *
  */
- 
+namespace Bixie\ZoocartMollie;
+
 // No direct access
+use Mollie\Api\Exceptions\ApiException;
+use Mollie\Api\MollieApiClient;
+use Mollie\Api\Types\PaymentMethod;
+
 defined('_JEXEC') or die;
 
-class Molliehelper {
+class Helper {
 	/**
 	 * @var string
 	 */
@@ -22,7 +27,7 @@ class Molliehelper {
 	 */
 	protected $params;
 	/**
-	 * @var Mollie_API_Client
+	 * @var MollieApiClient
 	 */
 	protected $mollie;
 
@@ -31,30 +36,37 @@ class Molliehelper {
 	 */
 	public function __construct ($params) {
 
-		require_once __DIR__ . "/Mollie/API/Autoloader.php";
 		$this->params = $params;
 		$this->api_key = $params->get('test', 0) ? $params->get('test_api', '') : $params->get('live_api', '');
 
-		$this->mollie = new Mollie_API_Client;
-		$this->mollie->setApiKey($this->api_key);
+        try {
+            $this->mollie = new MollieApiClient();
+            $this->mollie->setApiKey($this->api_key);
+        } catch (ApiException $e) {
+            //raise joomla error?
+        }
 
-	}
+    }
 
 	/**
 	 * Haal de lijst van beschikbare betaalmethodes
-	 * @return Mollie_API_Object_List|Mollie_API_Object_Method[]
+	 * @return \Mollie\Api\Resources\Method[]
+     * @throws ApiException
 	 */
 	public function getMethods () {
-		return $this->mollie->methods->all();
+        $methods = $this->mollie->methods->all();
+        return $methods->getArrayCopy();
 	}
 
 	/**
 	 * Haal de lijst van beschikbare banken
-	 * @return Mollie_API_Object_Issuer[]|Mollie_API_Object_List
+	 * @return \Mollie\Api\Resources\Issuer[]
+     * @throws ApiException
 	 */
 	public function getBanks () {
-		return $this->mollie->issuers->all();
-	}
+        $method = $this->mollie->methods->get(PaymentMethod::IDEAL, ['include' => 'issuers']);
+        return $method->issuers()->getArrayCopy();
+    }
 
 	/**
 	 * Zet een betaling klaar bij de bank en maak de betalings URL beschikbaar
@@ -65,15 +77,18 @@ class Molliehelper {
 	 * @param      $return_url
      * @param      $webhook_url
 	 * @param null $issuer
-	 * @return Mollie_API_Object_Payment
-	 * @throws Mollie_API_Exception
+	 * @return \Mollie\Api\Resources\Payment
+	 * @throws ApiException
 	 */
 	public function createPayment ($method, $order_id, $amount, $description, $return_url, $webhook_url, $issuer = null) {
 		if (empty($order_id)) {
-			throw new Mollie_API_Exception("No order_id given.");
+			throw new ApiException("No order_id given.");
 		}
 		return $this->mollie->payments->create(array(
-			"amount"       => $amount,
+			"amount"       => [
+			    "currency" => "EUR",
+                "value" => sprintf('%.2f', $amount),
+            ],
 			"method"       => $method,
 			"description"  => $description,
 			"redirectUrl"  => $return_url,
@@ -87,14 +102,14 @@ class Molliehelper {
 
 	/**
 	 * @param $transaction_id
-	 * @return Mollie_API_Object_Payment
-	 * @throws Mollie_API_Exception
+	 * @return \Mollie\Api\Resources\Payment|false
+	 * @throws ApiException
 	 */
 	public function checkPayment ($transaction_id) {
 
-		return $this->mollie->payments->get($transaction_id);
+        return $this->mollie->payments->get($transaction_id);
 
-	}
+    }
 
 
 

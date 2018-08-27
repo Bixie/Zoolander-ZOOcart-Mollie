@@ -28,7 +28,7 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
 			<div class="uk-grid">
 				<div class="uk-width-medium-1-2">
 					<div class="uk-panel uk-panel-box">
-						<img src="<?php echo $method->image->normal; ?>" alt="<?php echo $method->id; ?>" >
+						<img src="<?php echo $method->image->size1x; ?>" alt="<?php echo $method->id; ?>" >
 						<strong><?php echo $method->description; ?></strong>
 					</div>
 				</div>
@@ -47,7 +47,7 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
 							<label for="mollie_method_<?php echo $method->id; ?>">
 								<input type="radio" name="mollie_method" id="mollie_method_<?php echo $method->id; ?>"  class="uk-margin-small-right"
 									   value="<?php echo $method->id; ?>" <?php echo $method->id == $selected ? 'checked="checked"' : ''; ?>/>
-								<img src="<?php echo $method->image->normal; ?>" alt="<?php echo $method->id; ?>" >
+								<img src="<?php echo $method->image->size1x; ?>" alt="<?php echo $method->id; ?>" >
 								<strong><?php echo $method->description; ?></strong>
 							</label>
 						</div>
