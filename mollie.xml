@@ -11,9 +11,9 @@
 	<description>PLG_ZOOCART_PAYMENT_MOLLIE_DESCRIPTION</description>
 	<files>
 		<filename plugin="mollie">mollie.php</filename>
-		<filename>molliehelper.php</filename>
 		<folder>fields</folder>
-		<folder>Mollie</folder>
+		<folder>src</folder>
+		<folder>vendor</folder>
 		<folder>tmpl</folder>
 	</files>
 	<languages>
