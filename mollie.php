@@ -89,8 +89,10 @@ class plgZoocart_PaymentMollie extends JPaymentDriver {
 
     public function zoocartRender($data = array()) {
         $app = App::getInstance('zoo');
-        $data['order']->state = $app->zoocart->getConfig()->get('payment_pending_orderstate', 4);
-        $app->zoocart->table->orders->save($data['order']);
+        if ($data['order']->state == $app->zoocart->getConfig()->get('new_orderstate', 1)) {
+            $data['order']->state = $app->zoocart->getConfig()->get('payment_pending_orderstate', 4);
+            $app->zoocart->table->orders->save($data['order']);
+        }
 
         return parent::zoocartRender($data);
     }
@@ -180,8 +182,12 @@ class plgZoocart_PaymentMollie extends JPaymentDriver {
                     if ($payment->isPaid() == true) {
                         $return['status'] = JPaymentDriver::ZC_PAYMENT_PAYED;
                         $return['total'] = (float)$payment->amount->value;
-                        $message['message'] = JText::_('PLG_ZOOCART_PAYMENT_MOLLIE_TRANS_SUCCESS');
-                        $message['messageStyle'] = 'uk-alert-success';
+                        if ($Itemid = $this->params->get('redirect_success' , '')) {
+                            $return['redirect'] = JRoute::_('index.php?Itemid=' . $Itemid);
+                        } else {
+                            $message['message'] = JText::_('PLG_ZOOCART_PAYMENT_MOLLIE_TRANS_SUCCESS');
+                            $message['messageStyle'] = 'uk-alert-success';
+                        }
                     } elseif ($payment->isOpen() == false) {
                         $return['status'] = JPaymentDriver::ZC_PAYMENT_FAILED;
                         $return['total'] = $order->total;
